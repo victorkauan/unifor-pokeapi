@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "name": "vercel-deploy-test",
+  "version": 2,
+  "framework": "vite",
+  "installCommand": "pnpm install",
+  "devCommand":  "pnpm run dev",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist",
+  "trailingSlash": false
+}
