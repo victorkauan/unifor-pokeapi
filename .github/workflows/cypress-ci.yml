@@ -21,15 +21,6 @@ jobs:
         with:
           node-version: 22
 
-      # Usa cache para armazenar dependências (npm)
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
-
       # Instala as dependências do projeto
       - name: Install dependencies
         run: npm install
