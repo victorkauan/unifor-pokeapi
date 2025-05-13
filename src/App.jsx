@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import './App.css'
 import pokeballFoto from './assets/pokeball.png'
-import PokemonCard from './components/Pokemoncard';
+import PokemonCard from './components/PokemonCard';
 
 
 function PokeballIcon() {
