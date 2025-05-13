@@ -1,4 +1,4 @@
-export default defineConfig({
+module.exports = {
   e2e: {
     baseUrl: 'https://unifor-pokedex.vercel.app',
     video: false, 
@@ -7,4 +7,4 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
-});
+};
