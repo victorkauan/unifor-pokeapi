@@ -1,10 +1,9 @@
-module.exports = {
+// cypress.config.js
+export default {
   e2e: {
-    baseUrl: 'https://unifor-pokedex.vercel.app',
-    video: false, 
-    screenshotOnRunFailure: true,
     setupNodeEvents(on, config) {
-      // implement node event listeners here
     },
+    baseUrl: 'https://unifor-pokedex.vercel.app/',  // URL base dos testes
+    video: false,  // Desativa a gravação de vídeo dos testes
   },
 };

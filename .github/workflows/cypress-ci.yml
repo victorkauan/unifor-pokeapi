@@ -17,10 +17,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'  
+
+      - name: Cache Node modules  # (Opcional)
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: npm install
+
+      - name: Install Cypress
+        run: npm install cypress@14.3.3  # Instala a versão específica do Cypress
 
       - name: Run Cypress tests
         run: npx cypress run
