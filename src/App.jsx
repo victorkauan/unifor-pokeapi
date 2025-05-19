@@ -39,9 +39,10 @@ function PokeballIcon() {
 export default function App() {
   const [search, setSearch] = useState('');
   const [varieties, setVarieties] = useState([]);
+  const [query, setQuery] = useState('');
   const [initialPokemons, setInitialPokemons] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
-  const [searchError, setSearchError] = useState(null);
+  const [listError, setListError] = useState(null);
 
   const listRef = useRef(null);
   const handleWheel = (e) => {
@@ -71,41 +72,39 @@ export default function App() {
     })();
   }, []);
 
-  async function fetchVarieties(term)  {
-    setSearchError(null);
 
-    const normalized = term 
+  const handleSearch = async () => {
+    if (!search.trim()) return;
+
+    const normalized = search
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/['.]/g, '')
+      .replace(/['.]/g, '');
+
+    setQuery(normalized);
     try {
-      let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalized}`);
-      if (res.ok) {
-        const data = await res.json();
-        return [data.name];
-      }
-
-      res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${normalized}`);
-      if (!res.ok) throw new Error('Pokémon não encontrado');
-      const specie = await res.json();
-
-      return specie.varieties.map(v => v.pokemon.name);
-    } catch (err) {
-      throw new Error('Pokémon não encontrado');
-    }
-  };
-
-  const handleSearch = async () => {
-    if (!search.trim()) return;
-    try {
-      const names = await fetchVarieties(search);
+      const names = await fetchVarieties(normalized);
       setVarieties(names);
     } catch (err) {
-      setSearchError(err.message);
-      setVarieties([]);
+      setVarieties([normalized]);
     }
+  };
+  async function fetchVarieties(term) {
+
+
+    let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${term}`);
+    if (res.ok) {
+      const data = await res.json();
+      return [data.name];
+    }
+
+    res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${term}`);
+    if (!res.ok) throw new Error('Pokémon não encontrado');
+    const specie = await res.json();
+
+    return specie.varieties.map(v => v.pokemon.name);
   };
 
   const handleKeyDown = (e) => {
@@ -114,8 +113,8 @@ export default function App() {
 
   const handleClear = () => {
     setSearch('');
+    setQuery('')
     setVarieties([]);
-    setSearchError(null);
   };
 
   return (
@@ -135,9 +134,7 @@ export default function App() {
         </button>
       </div>
 
-      {searchError && <div className="error-message">{searchError}</div>}
-
-      {!searchError && varieties.length === 0 && !loadingList && (
+      {!query && !loadingList && (
         <div className="horizontal-list" ref={listRef} onWheel={handleWheel}>
           {initialPokemons.map(p => (
             <div className="card-container">
