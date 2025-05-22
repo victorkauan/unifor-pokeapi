@@ -1,15 +1,19 @@
-
-import React from 'react';
-import { useEffect, useRef } from 'react';
-import { useState } from 'react';
-import './App.css'
-import pokeballFoto from './assets/pokeball.png'
-import PokemonCard from './components/PokemonCard';
-import * as Sentry from "@sentry/react"
+import React from "react";
+import { useEffect, useRef } from "react";
+import { useState } from "react";
+import "./App.css";
+import pokeballFoto from "./assets/pokeball.png";
+import PokemonCard from "./components/PokemonCard";
+import * as Sentry from "@sentry/react";
 
 function PokeballIcon() {
   return (
-    <svg className="pokeball-icon" viewBox="-30 -30 600 600" width="24" height="24">
+    <svg
+      className="pokeball-icon"
+      viewBox="-30 -30 600 600"
+      width="24"
+      height="24"
+    >
       <circle
         className="outline"
         cx="256"
@@ -38,9 +42,9 @@ function PokeballIcon() {
 }
 
 export default function App() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [varieties, setVarieties] = useState([]);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [initialPokemons, setInitialPokemons] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -53,19 +57,18 @@ export default function App() {
   };
 
   useEffect(() => {
-
     (async () => {
       try {
-        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
+        const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
         const data = await res.json();
         const detailed = await Promise.all(
-          data.results.map(p => fetch(p.url).then(r => r.json()))
+          data.results.map((p) => fetch(p.url).then((r) => r.json()))
         );
 
         const sorted = detailed.sort((a, b) => a.id - b.id);
         setInitialPokemons(sorted);
       } catch (err) {
-        console.error(err)
+        console.error(err);
         Sentry.captureException(error);
       } finally {
         setLoadingList(false);
@@ -73,29 +76,27 @@ export default function App() {
     })();
   }, []);
 
-
   const handleSearch = async () => {
     if (!search.trim()) return;
 
     const normalized = search
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, '-')
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/['.]/g, '');
+      .replace(/\s+/g, "-")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/['.]/g, "");
 
     setQuery(normalized);
     try {
       const names = await fetchVarieties(normalized);
       setVarieties(names);
     } catch (err) {
-      Sentry.captureException(err)
+      Sentry.captureException(err);
       setVarieties([normalized]);
     }
   };
   async function fetchVarieties(term) {
-
-
     let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${term}`);
     if (res.ok) {
       const data = await res.json();
@@ -103,19 +104,19 @@ export default function App() {
     }
 
     res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${term}`);
-    if (!res.ok) Sentry.captureException(new Error('Pokémon não encontrado'));
+    if (!res.ok) Sentry.captureException(new Error("Pokémon não encontrado"));
     const specie = await res.json();
 
-    return specie.varieties.map(v => v.pokemon.name);
-  };
+    return specie.varieties.map((v) => v.pokemon.name);
+  }
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') handleSearch();
+    if (e.key === "Enter") handleSearch();
   };
 
   const handleClear = () => {
-    setSearch('');
-    setQuery('')
+    setSearch("");
+    setQuery("");
     setVarieties([]);
   };
 
@@ -128,39 +129,34 @@ export default function App() {
           className="search-bar"
           placeholder="Pesquise seu pokémon"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <button className="search-button" aria-label="Search" onClick={handleClear}>
+        <button
+          className="search-button"
+          aria-label="Search"
+          onClick={handleClear}
+        >
           <PokeballIcon />
         </button>
       </div>
 
       {!query && !loadingList && (
         <div className="horizontal-list" ref={listRef} onWheel={handleWheel}>
-          {initialPokemons.map(p => (
+          {initialPokemons.map((p) => (
             <div className="card-container">
-              <PokemonCard
-                key={p.id}
-                name={p.name}
-                compact />
+              <PokemonCard key={p.id} name={p.name} compact />
             </div>
-
-
           ))}
         </div>
       )}
 
       {varieties.length > 0 && (
         <div className="horizontal-list" ref={listRef} onWheel={handleWheel}>
-          {varieties.map(name => (
+          {varieties.map((name) => (
             <div className="card-container">
-              <PokemonCard
-                key={name}
-                name={name}
-                compact={false} />
+              <PokemonCard key={name} name={name} compact={false} />
             </div>
-
           ))}
         </div>
       )}
