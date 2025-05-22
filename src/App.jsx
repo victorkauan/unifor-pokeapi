@@ -1,10 +1,8 @@
-import React from "react";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import "./App.css";
+import { useEffect, useRef, useState } from "react";
+import * as Sentry from "@sentry/react";
 import pokeballFoto from "./assets/pokeball.png";
 import PokemonCard from "./components/PokemonCard";
-import * as Sentry from "@sentry/react";
+import "./App.css";
 
 function PokeballIcon() {
   return (
@@ -69,7 +67,7 @@ export default function App() {
         setInitialPokemons(sorted);
       } catch (err) {
         console.error(err);
-        Sentry.captureException(error);
+        Sentry.captureException(err);
       } finally {
         setLoadingList(false);
       }

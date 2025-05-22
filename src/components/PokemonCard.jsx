@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as Sentry from "@sentry/react";
 import { TYPE_COLORS } from "../constants/typeColors";
 import PokemonModal from "./PokemonModal";
 import "./PokemonCard.css";
 
-import * as Sentry from "@sentry/react";
-
 const PokemonCard = ({ name, compact }) => {
   const [pokemon, setPokemon] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(null);
-
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -61,6 +57,7 @@ const PokemonCard = ({ name, compact }) => {
   if (loading) {
     return <div className="pokemon-card">Carregando...</div>;
   }
+
   if (error) {
     return <div className="pokemon-card erro">Erro: Pokémon não existe!</div>;
   }

@@ -1,9 +1,9 @@
-import React from "react";
-import { TYPE_COLORS } from "../constants/typeColors";
-import { createPortal } from "react-dom";
 import { useState } from "react";
-import "./PokemonModal.css";
+import { createPortal } from "react-dom";
+import { TYPE_COLORS } from "../constants/typeColors";
 import sparkle from "../assets/sparkles-outline.svg";
+import "./PokemonModal.css";
+
 const PokemonModal = ({ pokemon, onClose }) => {
   const [showShiny, setShowShiny] = useState(false);
 
