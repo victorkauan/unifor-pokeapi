@@ -5,6 +5,7 @@ import { useState } from 'react';
 import './App.css'
 import pokeballFoto from './assets/pokeball.png'
 import PokemonCard from './components/PokemonCard';
+import * as Sentry from "@sentry/react"
 
 function PokeballIcon() {
   return (
@@ -42,7 +43,6 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [initialPokemons, setInitialPokemons] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
-  const [listError, setListError] = useState(null);
 
   const listRef = useRef(null);
   const handleWheel = (e) => {
@@ -65,7 +65,8 @@ export default function App() {
         const sorted = detailed.sort((a, b) => a.id - b.id);
         setInitialPokemons(sorted);
       } catch (err) {
-        console.error(err);
+        console.error(err)
+        Sentry.captureException(error);
       } finally {
         setLoadingList(false);
       }
@@ -88,6 +89,7 @@ export default function App() {
       const names = await fetchVarieties(normalized);
       setVarieties(names);
     } catch (err) {
+      Sentry.captureException(err)
       setVarieties([normalized]);
     }
   };
@@ -101,7 +103,7 @@ export default function App() {
     }
 
     res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${term}`);
-    if (!res.ok) throw new Error('Pokémon não encontrado');
+    if (!res.ok) Sentry.captureException(new Error('Pokémon não encontrado'));
     const specie = await res.json();
 
     return specie.varieties.map(v => v.pokemon.name);

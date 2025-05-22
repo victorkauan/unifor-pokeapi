@@ -3,6 +3,8 @@ import { TYPE_COLORS } from "../constants/typeColors";
 import PokemonModal from "./PokemonModal"
 import './PokemonCard.css'
 
+import * as Sentry from "@sentry/react"
+
 const PokemonCard = ({ name, compact }) => {
     const [pokemon, setPokemon] = useState(null);
 
@@ -44,6 +46,7 @@ const PokemonCard = ({ name, compact }) => {
 
         } catch (err) {
             setError(err.message);
+            Sentry.captureException(err.message);
         } finally {
             setLoading(false)
         }
