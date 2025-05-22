@@ -39,7 +39,7 @@ const PokemonModal = ({ pokemon, onClose }) => {
             <h2>
               {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
             </h2>
-            <button className="shiny-button" onClick={toggleShiny}>
+            <button className="shiny-button" onClick={toggleShiny} data-testid="shiny-button">
               <img src={sparkle} />
             </button>
 
