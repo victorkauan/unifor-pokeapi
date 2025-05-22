@@ -58,7 +58,7 @@ const PokemonCard = ({ name, compact }) => {
   };
 
   if (loading) {
-    return <div className="pokemon-card">Carregando...</div>;
+    return <div className="pokemon-card"><span>Carregando...</span></div>;
   }
   if (error) {
     return <div className="pokemon-card erro">Erro: Pokémon não existe!</div>;
