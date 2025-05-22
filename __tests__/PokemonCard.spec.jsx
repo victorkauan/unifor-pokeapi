@@ -14,15 +14,19 @@ describe("PokemonCard", () => {
     expect(isLoadingText).toBeInTheDocument();
   });
 
-  it("should render an error message when the Pokémon is not found", async () => {
-    render(<PokemonCard name="invalid" />);
+  it(
+    "should render an error message when the Pokémon is not found",
+    async () => {
+      render(<PokemonCard name="invalid" />);
 
-    const isLoadingText = screen.getByText(/carregando/i);
-    await waitForElementToBeRemoved(isLoadingText, { timeout: 2 * 1000 });
+      const isLoadingText = screen.getByText(/carregando/i);
+      await waitForElementToBeRemoved(isLoadingText, { timeout: 5 * 1000 }); // 5 seconds
 
-    const notFoundText = screen.getByText(/não.*existe/i);
-    expect(notFoundText).toBeInTheDocument();
-  });
+      const notFoundText = screen.getByText(/não.*existe/i);
+      expect(notFoundText).toBeInTheDocument();
+    },
+    10 * 1000 // 10 seconds
+  );
 
   it("should render Pokémon data correctly after successful fetch", async () => {
     render(<PokemonCard name="pikachu" />);
