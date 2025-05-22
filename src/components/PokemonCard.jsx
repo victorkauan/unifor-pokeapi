@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import * as Sentry from "@sentry/react";
 import { TYPE_COLORS } from "../constants/typeColors";
-import PokemonModal from "./PokemonModal";
 import "./PokemonCard.css";
 
 const PokemonCard = ({ name, compact }) => {
@@ -11,35 +10,34 @@ const PokemonCard = ({ name, compact }) => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const resetStates = () => {
+    const fetchPokemon = async () => {
+      try {
+        const res = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
+        );
+
+        const data = await res.json();
+
+        const speciesRes = await fetch(data.species.url);
+        const speciesData = await speciesRes.json();
+
+        setPokemon({ ...data, speciesData });
+      } catch (err) {
+        setError(err.message);
+        Sentry.captureException(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPokemon();
+
+    return () => {
       setLoading(true);
       setError(null);
       setPokemon(null);
     };
-
-    resetStates();
-    fetchPokemon();
   }, [name]);
-
-  const fetchPokemon = async () => {
-    try {
-      const res = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
-      );
-
-      const data = await res.json();
-
-      const speciesRes = await fetch(data.species.url);
-      const speciesData = await speciesRes.json();
-
-      setPokemon({ ...data, speciesData });
-    } catch (err) {
-      setError(err.message);
-      Sentry.captureException(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getTextColor = (backgroundColor) => {
     if (!backgroundColor || backgroundColor.length < 7) return "#FFFFFF";
