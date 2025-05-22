@@ -14,7 +14,7 @@ describe("PokemonCard", () => {
     expect(isLoadingText).toBeInTheDocument();
   });
 
-  it("shoul render an error message when the Pokémon is not found", async () => {
+  it("should render an error message when the Pokémon is not found", async () => {
     render(<PokemonCard name="invalid" />);
 
     const isLoadingText = screen.getByText(/carregando/i);
