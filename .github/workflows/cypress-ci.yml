@@ -27,4 +27,4 @@ jobs:
 
       # Executa os testes do Cypress
       - name: Run Cypress tests
-        run: npx cypress run
+        run: npm run test:e2e
