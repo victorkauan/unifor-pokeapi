@@ -1,11 +1,13 @@
-html, body, #root, .Pokedex {
+html,
+body,
+#root,
+.Pokedex {
   height: 100%;
   margin: 0;
 }
 
-
 .Pokedex {
-  background-color: #DB3B2F;
+  background-color: #db3b2f;
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -14,9 +16,9 @@ html, body, #root, .Pokedex {
 
 .background-image {
   position: absolute;
-  left: -200px;  
-  top: -200px;     
-  width: 400px;  
+  left: -200px;
+  top: -200px;
+  width: 400px;
   height: auto;
   pointer-events: none;
   z-index: -1;
@@ -42,7 +44,7 @@ html, body, #root, .Pokedex {
   padding: 20px;
   padding-right: 48px;
   font-size: 16px;
-  border-color:rgb(5, 5, 41); 
+  border-color: rgb(5, 5, 41);
   border-radius: 50px;
   box-sizing: border-box;
   box-shadow: 0 12px 8px rgba(0, 0, 0, 0.2);
@@ -62,16 +64,15 @@ html, body, #root, .Pokedex {
 }
 
 .search-button:hover {
-  transform: translateY(-50%) scale(1.3)
+  transform: translateY(-50%) scale(1.3);
 }
 
-.pokeball-icon .outline{
-
+.pokeball-icon .outline {
   transition: fill 0.2s;
 }
 
 .search-button:hover .pokeball-icon .outline {
-  fill:red;
+  fill: red;
 }
 
 .card-container {

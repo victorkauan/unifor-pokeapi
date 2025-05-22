@@ -25,6 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Executa os testes do Cypress
-      - name: Run Cypress tests
+      # Execute testes unitários
+      - name: Run unit tests
+        run: npm run test:unit
+
+      # Executa testes E2E
+      - name: Run E2E tests
         run: npm run test:e2e
