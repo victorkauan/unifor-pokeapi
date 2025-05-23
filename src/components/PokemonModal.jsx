@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import * as Sentry from "@sentry/react";
 import { TYPE_COLORS } from "../constants/typeColors";
 import sparkle from "../assets/sparkles-outline.svg";
 import "./PokemonModal.css";
 
 const PokemonModal = ({ pokemon, onClose }) => {
+  Sentry.logger.info(`Opened modal for Pokémon: ${pokemon.name}`);
   const [showShiny, setShowShiny] = useState(false);
 
   const toggleShiny = () => {
     setShowShiny(!showShiny);
+    Sentry.logger.info(
+      `Toggled shiny for ${pokemon.name}: ${!showShiny ? "on" : "off"}`
+    );
   };
 
   const handleClose = (e) => {
     e.stopPropagation();
     onClose();
+    Sentry.logger.info(`Closed modal for Pokémon: ${pokemon.name}`);
   };
 
   return createPortal(
@@ -39,7 +45,11 @@ const PokemonModal = ({ pokemon, onClose }) => {
             <h2>
               {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
             </h2>
-            <button className="shiny-button" onClick={toggleShiny} data-testid="shiny-button">
+            <button
+              className="shiny-button"
+              onClick={toggleShiny}
+              data-testid="shiny-button"
+            >
               <img src={sparkle} />
             </button>
 

@@ -23,9 +23,11 @@ const PokemonCard = ({ name, compact }) => {
         const speciesData = await speciesRes.json();
 
         setPokemon({ ...data, speciesData });
+        Sentry.logger.info(`Fetched data for Pokémon: ${name}`);
       } catch (err) {
-        setError(err.message);
+        Sentry.logger.error(err.message);
         Sentry.captureException(err.message);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -37,6 +39,7 @@ const PokemonCard = ({ name, compact }) => {
       setLoading(true);
       setError(null);
       setPokemon(null);
+      Sentry.logger.info(`Cleaned up PokémonCard for: ${name}`);
     };
   }, [name]);
 
