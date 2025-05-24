@@ -55,6 +55,8 @@ export default function App() {
   };
 
   useEffect(() => {
+    Sentry.logger.trace("Fetching initial Pokémon list.");
+
     (async () => {
       try {
         const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
@@ -65,8 +67,9 @@ export default function App() {
 
         const sorted = detailed.sort((a, b) => a.id - b.id);
         setInitialPokemons(sorted);
+        Sentry.logger.info("Initial Pokémon list loaded successfully");
       } catch (err) {
-        console.error(err);
+        Sentry.logger.error(err);
         Sentry.captureException(err);
       } finally {
         setLoadingList(false);
@@ -85,11 +88,14 @@ export default function App() {
       .replace(/[\u0300-\u036f]/g, "")
       .replace(/['.]/g, "");
 
+    Sentry.logger.info(`User searched for: ${normalized}`);
     setQuery(normalized);
     try {
       const names = await fetchVarieties(normalized);
       setVarieties(names);
+      Sentry.logger.info(`Fetched varieties for: ${normalized}`);
     } catch (err) {
+      Sentry.logger.warn(`Failed to fetch varieties for: ${normalized}`);
       Sentry.captureException(err);
       setVarieties([normalized]);
     }

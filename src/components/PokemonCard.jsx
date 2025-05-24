@@ -24,8 +24,9 @@ const PokemonCard = ({ name, compact }) => {
 
         setPokemon({ ...data, speciesData });
       } catch (err) {
-        setError(err.message);
+        Sentry.logger.error(err.message);
         Sentry.captureException(err.message);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
